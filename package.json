@@ -26,9 +26,9 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
-    "@noir-lang/aztec_backend": "^0.10.0",
-    "@noir-lang/barretenberg": "^2.18.0",
-    "@noir-lang/noir_wasm": "^0.10.0",
+    "@noir-lang/aztec_backend": "0.11.0",
+    "@noir-lang/barretenberg": "2.21.0",
+    "@noir-lang/noir_wasm": "0.12.0",
     "global": "^4.4.0",
     "npx": "^10.2.2",
     "react-scripts": "4.0.3"

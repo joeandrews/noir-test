@@ -2,13 +2,13 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { acir_from_bytes } from "@noir-lang/noir_wasm";
+import init, { acir_from_bytes } from "@noir-lang/noir_wasm";
 import {
   setup_generic_prover_and_verifier,
   verify_proof,
   create_proof_with_witness,
 } from "@noir-lang/barretenberg/dest/client_proofs";
-import all, {
+import initBackend, {
   packed_witness_to_witness,
   serialise_public_inputs,
   compute_witnesses,
@@ -20,9 +20,12 @@ const witnessHex =
   "a5cc090d00300800b1ecdfdc900c0178410d12718388ab80464b13e6775ce8c0854f5e2c5e6c5cc8e1c5e5c5e34501";
 
 async function prove() {
-  console.log(all);
-  let acir = acir_from_bytes(new Uint8Array(Buffer.from(acirHex)));
-  let witnessByteArray = new Uint8Array(Buffer.from(witnessHex));
+  const wasm = await init("noir_wasm_bg.wasm");
+  let acir = acir_from_bytes(new Uint8Array(Buffer.from(acirHex, "hex")));
+  console.log(acir);
+  await initBackend("aztec_backend_bg.wasm");
+
+  let witnessByteArray = new Uint8Array(Buffer.from(witnessHex, "hex"));
   const barretenberg_witness_arr = await packed_witness_to_witness(
     acir,
     witnessByteArray
