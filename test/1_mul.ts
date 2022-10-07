@@ -7,9 +7,9 @@ import { expect } from 'chai';
 import { ethers } from "hardhat";
 import { Contract, ContractFactory, utils } from 'ethers';
 
-describe("1_mul", function() {
+describe("1_mul", function () {
 
-    it("Should verify proof using witness arr", async function() {
+    it.only("Should verify proof using witness arr", async function () {
         let acirByteArray = path_to_uint8array(path.resolve(__dirname, '../circuits/build/p.acir'));
         let acir = acir_from_bytes(acirByteArray);
 
@@ -18,38 +18,38 @@ describe("1_mul", function() {
 
         let [prover, verifier] = await setup_generic_prover_and_verifier(acir);
         console.log('created prover and verifier');
-    
+
         const proof = await create_proof_with_witness(prover, barretenberg_witness_arr);
         console.log('proof: ' + proof.toString('hex'));
-    
+
         const verified = await verify_proof(verifier, proof);
 
         expect(verified).eq(true)
     });
 
-    it("Should verify proof using abi and acir from typescript", async function() {        
+    it("Should verify proof using abi and acir from typescript", async function () {
         // Compile noir program
-        const compiled_program = compile(path.resolve(__dirname, '../circuits/src/main.nr')); 
+        const compiled_program = compile(path.resolve(__dirname, '../circuits/src/main.nr'));
         let acir = compiled_program.circuit;
         const abi = compiled_program.abi;
-        
+
         // Specify abi
         abi.x = 3;
         abi.y = 4;
         abi.return = 12;
 
         let [prover, verifier] = await setup_generic_prover_and_verifier(acir);
- 
+
         const proof = await create_proof(prover, acir, abi);
 
         const verified = await verify_proof(verifier, proof);
-      
+
         console.log(verified);
 
         expect(verified).eq(true)
     });
 
-    it("Should verify proof using acir from file and abi for typescript", async function() {
+    it("Should verify proof using acir from file and abi for typescript", async function () {
         let acirByteArray = path_to_uint8array(path.resolve(__dirname, '../circuits/build/p.acir'));
         let acir = acir_from_bytes(acirByteArray);
 
@@ -61,23 +61,23 @@ describe("1_mul", function() {
         }
 
         let [prover, verifier] = await setup_generic_prover_and_verifier(acir);
- 
+
         const proof = await create_proof(prover, acir, abi);
 
         const verified = await verify_proof(verifier, proof);
-      
+
         console.log(verified);
 
         expect(verified).eq(true)
     });
 
-    it("Should verify proof using compute witness", async function() {
+    it("Should verify proof using compute witness", async function () {
         let acirByteArray = path_to_uint8array(path.resolve(__dirname, '../circuits/build/p.acir'));
         let acir = acir_from_bytes(acirByteArray);
 
         let [prover, verifier] = await setup_generic_prover_and_verifier(acir);
         console.log('created prover and verifier');
- 
+
         let initial_js_witness = ["0x03", "0x04", "0x0c"];
         // NOTE: breaks without even number of bytes specified, the line below does not work
         // let initial_js_witness = ["0x3", "0x4", "0x5100"];
@@ -85,7 +85,7 @@ describe("1_mul", function() {
         let barretenberg_witness_arr = compute_witnesses(acir, initial_js_witness);
 
         const proof = await create_proof_with_witness(prover, barretenberg_witness_arr);
-    
+
         const verified = await verify_proof(verifier, proof);
 
         expect(verified).eq(true)
@@ -93,7 +93,7 @@ describe("1_mul", function() {
 
 });
 
-describe('1_mul using solidity verifier', function() {
+describe('1_mul using solidity verifier', function () {
     let Verifier: ContractFactory;
     let verifierContract: Contract;
 
@@ -113,7 +113,7 @@ describe('1_mul using solidity verifier', function() {
         }
 
         let [prover, verifier] = await setup_generic_prover_and_verifier(acir);
- 
+
         const proof = await create_proof(prover, acir, abi);
 
         const verified = await verify_proof(verifier, proof);
@@ -127,5 +127,6 @@ describe('1_mul using solidity verifier', function() {
 
 function path_to_uint8array(path: string) {
     let buffer = readFileSync(path);
+    console.log('path', path, buffer.toString('hex'))
     return new Uint8Array(buffer);
 }
