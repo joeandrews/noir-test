@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@noir-lang/aztec_backend": "0.11.0",
-    "@noir-lang/barretenberg": "2.21.0",
+    "@noir-lang/barretenberg": "2.19.0",
     "@noir-lang/noir_wasm": "0.12.0",
     "global": "^4.4.0",
     "npx": "^10.2.2",
